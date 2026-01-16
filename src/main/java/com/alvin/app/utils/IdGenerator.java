@@ -13,7 +13,7 @@ public class IdGenerator {
         public final String strpath;
         public final int default_id;
 
-        private IdOption(String strpath , int default_id) {
+        IdOption(String strpath , int default_id) {
             this.strpath = strpath;
             this.default_id = default_id;
         }
@@ -29,31 +29,18 @@ public class IdGenerator {
         this.option = option;
 
     }
-    private void getIdFromFile(){
+    private void getIdFromFile() throws IOException , NumberFormatException{
         Path path = Paths.get(option.getStrPath());
         if(Files.exists(path)){
-            try {
-                this.id = Integer.parseInt(Files.readString(path));
-                Files.writeString(path , Integer.toString(id + 1));
-            }
-            catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            catch (NumberFormatException e){
-                throw new NumberFormatException();
-            }
+            this.id = Integer.parseInt(Files.readString(path));
+            Files.writeString(path , Integer.toString(id + 1));
         }
         else {
-            try {
-                Files.writeString(path , Integer.toString(option.getDefaultId()));
-            }
-            catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            Files.writeString(path , Integer.toString(option.getDefaultId()));
             this.id = option.getDefaultId();
         }
     }
-    public int getId(){
+    public int getId() throws  IOException , NumberFormatException{
         getIdFromFile();
         return id;
     }
