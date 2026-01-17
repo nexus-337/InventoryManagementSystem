@@ -36,6 +36,7 @@ public class IdGenerator {
             Files.writeString(path , Integer.toString(id + 1));
         }
         else {
+            Files.createDirectories(path.getParent());
             Files.writeString(path , Integer.toString(option.getDefaultId()));
             this.id = option.getDefaultId();
         }
