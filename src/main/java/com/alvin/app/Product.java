@@ -10,6 +10,10 @@ public class Product {
     private Category category;
     private int unit_price;
     private int stock_quantity;
+
+    public enum Category{LAPTOP , SMARTPHONE , HEADPHONE , LAPTOP_ACCESSORY
+        , MOBILE_ACCESSORY, SPEAKER , BLUETOOTH_SPEAKER}
+
     @JsonCreator
     private Product(@JsonProperty("id") int id,@JsonProperty("category") Category category ,@JsonProperty("unit_price") int unit_price ,@JsonProperty("stock_quantity") int stock_quantity) {
         this.id = id;
@@ -21,11 +25,6 @@ public class Product {
         IdGenerator gen = new IdGenerator(IdGenerator.IdOption.PRODUCT);
         return new Product(gen.getId() , category , unit_price , init_stock_quantity);
     }
-    public static Product reCreate(int id , Category category , int unit_price , int init_stock_quantity){
-        return new Product(id, category, unit_price , init_stock_quantity);
-    }
-    public enum Category{LAPTOP , SMARTPHONE , HEADPHONE , LAPTOP_ACCESSORY
-                         , MOBILE_ACCESSORY, SPEAKER , BLUETOOTH_SPEAKER}
 
     public void setStock_quantity(int stock_quantity) {
         this.stock_quantity = stock_quantity;
