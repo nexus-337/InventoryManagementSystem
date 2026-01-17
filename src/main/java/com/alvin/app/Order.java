@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class Order {
@@ -25,6 +25,11 @@ public class Order {
     public static Order createNew(String customer_name , List<OrderItem> items) throws IOException{
         IdGenerator gen = new IdGenerator(IdGenerator.IdOption.ORDER);
         return new Order(gen.getId(), customer_name, LocalDateTime.now(), items);
+    }
+    @Override
+    public String toString(){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy hh:mm:ss a");
+        return String.format("%-10d %-40s %-10s %-20s" , this.id , this.customer_name, this.items.size(), this.order_date_time.format(formatter));
     }
     public void setCustomer_name(String customer_name) {
         this.customer_name = customer_name;

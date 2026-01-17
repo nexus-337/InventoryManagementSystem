@@ -21,6 +21,10 @@ public class OrderItem {
     public int getProductId(){
         return this.productId;
     }
+    @Override
+    public String toString(){
+        return String.format("%-10d %-15d %-15d %-15d" , this.productId , this.quantity , this.unit_price, this.total_price);
+    }
     public int getQuantity(){
         return this.quantity;
     }

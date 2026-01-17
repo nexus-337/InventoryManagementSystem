@@ -8,6 +8,7 @@ import java.io.IOException;
 public class Product {
     private final int id;
     private Category category;
+    private String name;
     private int unit_price;
     private int stock_quantity;
 
@@ -15,15 +16,20 @@ public class Product {
         , MOBILE_ACCESSORY, SPEAKER , BLUETOOTH_SPEAKER}
 
     @JsonCreator
-    private Product(@JsonProperty("id") int id,@JsonProperty("category") Category category ,@JsonProperty("unit_price") int unit_price ,@JsonProperty("stock_quantity") int stock_quantity) {
+    private Product(@JsonProperty("id") int id,@JsonProperty("category") Category category ,@JsonProperty("unit_price") int unit_price ,@JsonProperty("stock_quantity") int stock_quantity , @JsonProperty("name") String name) {
         this.id = id;
         this.category = category;
         this.unit_price = unit_price;
         this.stock_quantity = stock_quantity;
+        this.name = name;
     }
-    public static Product createNew(Category category , int unit_price , int init_stock_quantity) throws IOException {
+    public static Product createNew(Category category , String name ,  int unit_price , int init_stock_quantity ) throws IOException {
         IdGenerator gen = new IdGenerator(IdGenerator.IdOption.PRODUCT);
-        return new Product(gen.getId() , category , unit_price , init_stock_quantity);
+        return new Product(gen.getId() , category , unit_price , init_stock_quantity , name);
+    }
+    @Override
+    public String toString(){
+        return String.format("%-10d %-40s %-20s %-15d %-15d" , this.id , this.name , this.category.toString() , this.unit_price , this.stock_quantity);
     }
 
     public void setStock_quantity(int stock_quantity) {

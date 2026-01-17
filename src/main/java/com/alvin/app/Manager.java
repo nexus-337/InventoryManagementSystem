@@ -48,8 +48,8 @@ public class Manager {
                 orders.remove(id);
                 saveToFile();
             }
-            public void newProduct(Product.Category category , int unit_price , int init_stock) throws IOException {
-                Product temp_product = Product.createNew(category , unit_price , init_stock);
+            public void newProduct(Product.Category category , int unit_price , int init_stock , String name) throws IOException {
+                Product temp_product = Product.createNew(category , name , unit_price , init_stock);
                 products.put(temp_product.getId() , temp_product);
                 saveToFile();
             }
