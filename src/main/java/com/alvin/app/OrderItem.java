@@ -34,7 +34,6 @@ public class OrderItem {
     public int getTotal_price(){
         return this.total_price;
     }
-
 }
 
 

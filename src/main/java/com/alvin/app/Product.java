@@ -32,6 +32,14 @@ public class Product {
         return String.format("%-10d %-40s %-20s %-15d %-15d" , this.id , this.name , this.category.toString() , this.unit_price , this.stock_quantity);
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
     public void setStock_quantity(int stock_quantity) {
         this.stock_quantity = stock_quantity;
     }
