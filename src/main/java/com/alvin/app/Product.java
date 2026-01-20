@@ -13,7 +13,7 @@ public class Product {
     private int stock_quantity;
 
     public enum Category{LAPTOP , SMARTPHONE , HEADPHONE , LAPTOP_ACCESSORY
-        , MOBILE_ACCESSORY, SPEAKER , BLUETOOTH_SPEAKER}
+        , MOBILE_ACCESSORY, SPEAKER , OTHER}
 
     @JsonCreator
     private Product(@JsonProperty("id") int id,@JsonProperty("category") Category category ,@JsonProperty("unit_price") int unit_price ,@JsonProperty("stock_quantity") int stock_quantity , @JsonProperty("name") String name) {
