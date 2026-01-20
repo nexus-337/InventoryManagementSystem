@@ -29,7 +29,7 @@ public class Order {
     @Override
     public String toString(){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy hh:mm:ss a");
-        return String.format("%-10d %-40s %-10s %-20s" , this.id , this.customer_name, this.items.size(), this.order_date_time.format(formatter));
+        return String.format("%-10d %-40s %-15s %-20s" , this.id , this.customer_name, this.items.size(), this.order_date_time.format(formatter));
     }
     public void setCustomer_name(String customer_name) {
         this.customer_name = customer_name;
