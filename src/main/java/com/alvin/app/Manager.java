@@ -1,14 +1,11 @@
 package com.alvin.app;
 
 import java.io.IOException;
-import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -23,14 +20,18 @@ public class Manager {
             private HashMap<Integer,Product> products;
             private HashMap<Integer,Order> orders;
             private static final int default_low_stock = 10;
-            private SortOption sort_option = SortOption.DEFAULT;
+            private ProductSortOption product_sort_option = ProductSortOption.DEFAULT;
+            private OrderSortOption order_sort_option = OrderSortOption.DEFAULT;
             public Manager() throws IOException {
                 products = new HashMap<>();
                 orders = new HashMap<>();
                 loadFromFile();
             }
-            public enum SortOption {
+            public enum ProductSortOption {
                 NAME , PRICE , STOCK , DEFAULT
+            }
+            public enum OrderSortOption{
+                NAME, NO_ITEMS , DATE , DEFAULT
             }
             private enum file_paths{
                 PRODUCT(Paths.get("productData/products.json")) , ORDER(Paths.get("orderData/orders.json"));
@@ -70,22 +71,22 @@ public class Manager {
             }
             public String productsToString(){
                 StringBuilder builder = new StringBuilder();
-                if(sort_option == SortOption.DEFAULT) {
+                if(product_sort_option == ProductSortOption.DEFAULT) {
                     for (Product temp_product : products.values()) {
                         builder.append(temp_product.toString()).append("\n");
                     }
                 }
-                else if(sort_option == SortOption.NAME){
+                else if(product_sort_option == ProductSortOption.NAME){
                     for (Product temp_product : products.values().stream().sorted(Comparator.comparing(Product::getName)).toList()){
                         builder.append(temp_product.toString()).append("\n");
                     }
                 }
-                else if (sort_option == SortOption.PRICE){
+                else if (product_sort_option == ProductSortOption.PRICE){
                     for (Product temp_product : products.values().stream().sorted(Comparator.comparing(Product::getUnit_price)).toList()){
                         builder.append(temp_product.toString()).append("\n");
                     }
                 }
-                else if (sort_option == SortOption.STOCK){
+                else if (product_sort_option == ProductSortOption.STOCK){
                     for (Product temp_product : products.values().stream().sorted(Comparator.comparing(Product::getUnit_price)).toList()){
                         builder.append(temp_product.toString()).append("\n");
                     }
@@ -117,13 +118,13 @@ public class Manager {
 
             public String ordersToString(){
                 StringBuilder builder = new StringBuilder();
-                if(sort_option == SortOption.DEFAULT) {
+                if(product_sort_option == ProductSortOption.DEFAULT) {
                     for (Order temp_order : orders.values()) {
                         builder.append(temp_order.toString()).append("\n");
                     }
                     return builder.toString();
                 }
-                else if (sort_option == SortOption.NAME){
+                else if (product_sort_option == ProductSortOption.NAME){
 
                     for (Order temp_order : orders.values().stream().sorted(Comparator.comparing(Order::getCustomer_name)).toList()){
                         builder.append(temp_order.toString()).append("\n");
@@ -224,14 +225,24 @@ public class Manager {
                 temp_product.setStock_quantity(stock);
                 saveToFile();
             }
-            public void updateStockOfProduct(int id , String choice) throws IdNotFoundException {
+            public void updateStockOfProduct(int id , String choice , int value) throws IdNotFoundException {
                 Product temp_product = products.get(id);
                 if(temp_product == null){
                     throw new IdNotFoundException("Given product id not found for update stock of product");
                 }
+
+                if(choice.equals("add")){
+                    temp_product.setStock_quantity(temp_product.getStock_quantity() + value);
+                }
+                else if (choice.equals("remove")){
+                    temp_product.setStock_quantity(temp_product.getStock_quantity() - value);
+                }
             }
-            public void sort(SortOption option){
-                sort_option = option;
+            public void sortProduct(ProductSortOption option){
+                product_sort_option = option;
+            }
+            public void sortOrder(OrderSortOption option){
+                order_sort_option = option;
             }
             public boolean isProduct(int id){
                 return products.containsKey(id);

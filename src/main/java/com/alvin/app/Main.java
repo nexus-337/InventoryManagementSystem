@@ -34,6 +34,7 @@ public class Main {
                     System.out.println();
                     System.out.println(manager.productToString(productid));
                     System.out.println();
+                    break;
 
                 case "view orders", "vo" , "3" , "view order" :
                     System.out.println();
@@ -68,14 +69,15 @@ public class Main {
                     int inp_stock_quantity;
                     int inp;
                     do {
-                        inp = getIntFromUser("Enter the category of the product:\n" +
-                                "1 = Laptop\n" +
-                                "2 = Smartphone\n" +
-                                "3 = Headphone\n" +
-                                "4 = Laptop Accessory\n" +
-                                "5 = Mobile Accessory\n" +
-                                "6 = Speaker\n" +
-                                "7 = Other ");
+                        inp = getIntFromUser("""
+                                Enter the category of the product:
+                                1 = Laptop
+                                2 = Smartphone
+                                3 = Headphone
+                                4 = Laptop Accessory
+                                5 = Mobile Accessory
+                                6 = Speaker
+                                7 = Other\s""");
                         switch (inp){
                             case 1:
                                 inp_category = Product.Category.LAPTOP;
@@ -113,6 +115,7 @@ public class Main {
                         System.err.println("Error in reading/writin files");
                         continue;
                     }
+                    break;
                 case "new order" , "no" , "8":
                     String inp_cust_name = getStringFromUser("Enter the customer name: ");
                     List<OrderItem> inp_order_items = new ArrayList<>();
@@ -174,14 +177,15 @@ public class Main {
                                 continue;
                             }
                             do {
-                                inp = getIntFromUser("Enter the new category of the product:\n" +
-                                        "1 = Laptop\n" +
-                                        "2 = Smartphone\n" +
-                                        "3 = Headphone\n" +
-                                        "4 = Laptop Accessory\n" +
-                                        "5 = Mobile Accessory\n" +
-                                        "6 = Speaker\n" +
-                                        "7 = Other ");
+                                inp = getIntFromUser("""
+                                        Enter the new category of the product:
+                                        1 = Laptop
+                                        2 = Smartphone
+                                        3 = Headphone
+                                        4 = Laptop Accessory
+                                        5 = Mobile Accessory
+                                        6 = Speaker
+                                        7 = Other\s""");
                                 switch (inp){
                                     case 1:
                                         input_category = Product.Category.LAPTOP;
@@ -230,6 +234,7 @@ public class Main {
                             } catch (IdNotFoundException e) {
                                 System.err.println("Product doesnt exist");
                             }
+                            break;
 
 
                         case 4:
@@ -240,12 +245,13 @@ public class Main {
                             }
                             inp_n = getIntFromUser("Enter the value of new Stock quantity: ");
                             try {
-                                manager.editStockofProduct(input_n , n);
+                                manager.editStockofProduct(input_n , inp_n);
                             } catch (IOException e) {
                                 System.err.println("Error in reading/writing files");
                             } catch (IdNotFoundException e) {
                                 System.err.println("Product doesnt exist");
                             }
+                            break;
                     }
                 case "delete product" , "dp" , "10":
                     input_n = getIntFromUser("Enter the id of the product you want to delete: ");
@@ -311,23 +317,106 @@ public class Main {
                         continue;
                     }
                     while (true){
-                        inp_str = getStringFromUser("Enter if you want to add or remove stock: ").toLowerCase().trim();
-                        if (inp_str == "add"){
+                        inp_str = getStringFromUser("Enter if you want to add or reduce stock: ").toLowerCase().trim();
+                        if (inp_str.equals("add")){
                             inp = getIntFromUser("Enter the amount you want to add: ");
                             if (inp < 0){
                                 System.err.println("Cannot add negative amount");
                                 continue;
                             }
-                            manager.
+                            try {
+                                manager.updateStockOfProduct(input_n , inp_str  ,inp );
+                            }
+                            catch (IdNotFoundException e) {
+                                System.err.println("Product doesnt exist");
+                            }
                         }
-
+                        else if (inp_str.equals("remove")){
+                            inp = getIntFromUser("Enter the amount you want to remove: ");
+                            if (inp < 0){
+                                System.err.println("Cannot remove negative amount");
+                                continue;
+                            }
+                            try {
+                                manager.updateStockOfProduct(input_n , inp_str  ,inp );
+                            }
+                            catch (IdNotFoundException e) {
+                                System.err.println("Product doesnt exist");
+                            }
+                        }
                     }
 
                 case "sort products" , "sp" , "14":
+                    while(true){
+                        inp_str = getStringFromUser("Enter the sort method (name , price , stock , default): ");
+                        switch (inp_str) {
+                            case "name":{
+                                manager.sortProduct(Manager.ProductSortOption.NAME);
+                                break;
+                            }
+                            case "price":{
+                                manager.sortProduct(Manager.ProductSortOption.PRICE);
+                                break;
+                            }
+                            case "stock":{
+                                manager.sortProduct(Manager.ProductSortOption.STOCK);
+                                break;
+                            }
+                            case "default":{
+                                manager.sortProduct(Manager.ProductSortOption.DEFAULT);
+                                break;
+                            }
+                            default:{
+                                System.err.println("Enter the given options only");
+                                continue;
+                            }
+                        }
+                        break;
+                    }
+                    break;
 
                 case "sort orders" , "so" , "15":
+                    while(true){
+                        inp_str = getStringFromUser("Enter the sort method (name/item/date/default): ");
+                        switch (inp_str) {
+                            case "name":{
+                                manager.sortOrder(Manager.OrderSortOption.NAME);
+                                break;
+                            }
+                            case "item":{
+                                manager.sortOrder(Manager.OrderSortOption.NO_ITEMS);
+                                break;
+                            }
+                            case "date":{
+                                manager.sortOrder(Manager.OrderSortOption.DATE);
+                                break;
+                            }
+                            case "default":{
+                                manager.sortOrder(Manager.OrderSortOption.DEFAULT);
+                                break;
+                            }
+                            default:{
+                                System.err.println("Enter the given options only");
+                                continue;
+                            }
+                        }
+                        break;
+                    }
+                    System.out.println("Sort option updated");
+                    break;
+
                 case "edit low stock" , "els" , "16":
+                    input_n = getIntFromUser("Enter the new low stock constant number: ");
+                    try {
+                        manager.setLowStockConstant(input_n);
+                    } catch (IOException e) {
+                        System.err.println("Error in reading/writing files");
+                    }
+                    break;
+
                 case "exit" , "e" , "0":
+                    System.out.println("Program is exiting");
+                    break;
             }
         }
     }
@@ -349,7 +438,7 @@ public class Main {
     }
     private static String getStringFromUser(String message){
         Scanner scanner = new Scanner(System.in);
-        String input = "";
+        String input;
         while(true) {
             System.out.print(message);
             input = scanner.nextLine();
@@ -360,21 +449,6 @@ public class Main {
             return input;
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     private static void printHeader(){
 
