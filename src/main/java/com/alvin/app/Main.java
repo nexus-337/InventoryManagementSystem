@@ -7,6 +7,17 @@ import java.io.IOException;
 import java.util.*;
 
 public class Main {
+    public static final String RESET = "\u001B[0m";
+    public static final String BOLD = "\u001B[1m";
+    public static final String RED = "\u001B[31m";
+    public static final String GREEN = "\u001B[32m";
+    public static final String YELLOW = "\u001B[33m";
+    public static final String BLUE = "\u001B[34m";
+    public static final String PURPLE = "\u001B[35m";
+    public static final String CYAN = "\u001B[36m";
+    public static final String WHITE = "\u001B[37m";
+
+
     public static void main(String[] args) {
         printHeader();
         printHelp();
@@ -18,11 +29,13 @@ public class Main {
             System.out.println("Error loading user files. Exiting application");
             return;
         }
-
-
+        main_loop:
         while (true){
             input = getStringFromUser(">>").toLowerCase().trim();
             switch (input){
+                case "help" , "h":
+                    printHelp();
+                    break;
                 case "view products" , "vp" , "1" , "view product":
                     System.out.println();
                     System.out.printf("\u001B[1m\u001B[34m%-10s %-40s %-20s %-15s %-15s\u001B[0m\u001B[1m%n", "ID", "NAME", "CATEGORY" ,"UNIT PRICE" , "STOCK");
@@ -77,7 +90,8 @@ public class Main {
                                 4 = Laptop Accessory
                                 5 = Mobile Accessory
                                 6 = Speaker
-                                7 = Other\s""");
+                                7 = Other
+                                Enter: \s""");
                         switch (inp){
                             case 1:
                                 inp_category = Product.Category.LAPTOP;
@@ -127,7 +141,10 @@ public class Main {
                         System.out.println();
                         while(true){
                             temp_productid = getIntFromUser("Enter the product id: ");
-                            if (temp_productid == 0)break;
+                            if (temp_productid == 0){
+                                n = false;
+                                break;
+                            }
                             temp_quantity = getIntFromUser("Enter the quantity: ");
                             try {
                                 temp_order_item = manager.createOrderItem(temp_productid , temp_quantity);
@@ -185,7 +202,8 @@ public class Main {
                                         4 = Laptop Accessory
                                         5 = Mobile Accessory
                                         6 = Speaker
-                                        7 = Other\s""");
+                                        7 = Other
+                                        \s""");
                                 switch (inp){
                                     case 1:
                                         input_category = Product.Category.LAPTOP;
@@ -204,6 +222,7 @@ public class Main {
                                         break;
                                     case 6:
                                         input_category = Product.Category.SPEAKER;
+
                                         break;
                                     case 7:
                                         input_category = Product.Category.OTHER;
@@ -416,10 +435,14 @@ public class Main {
 
                 case "exit" , "e" , "0":
                     System.out.println("Program is exiting");
-                    break;
+                    break main_loop;
+
+                default:
+                    System.out.println("Command not found");
             }
         }
     }
+
     private static int getIntFromUser(String message){
         Scanner scanner = new Scanner(System.in);
         int input;
@@ -427,14 +450,13 @@ public class Main {
             try {
                 System.out.print(message);
                 input = scanner.nextInt();
-                scanner.nextLine();
                 return input;
             }
             catch (InputMismatchException e) {
-                System.out.println("Enter an integer");
+                System.out.println("Enter an integer\n");
+                scanner.nextLine();
             }
         }
-
     }
     private static String getStringFromUser(String message){
         Scanner scanner = new Scanner(System.in);
@@ -443,51 +465,48 @@ public class Main {
             System.out.print(message);
             input = scanner.nextLine();
             if (input.isEmpty()){
-                System.out.println("Input cannot be blank.");
                 continue;
             }
             return input;
         }
     }
-
-    private static void printHeader(){
-
-        System.out.println("==================================================");
-        System.out.println("       INVENTORY MANAGEMENT SYSTEM - v1.0         ");
-        System.out.println("               By Alvin                           ");
-        System.out.println("==================================================");
+    private static void printHeader() {
+        System.out.println(CYAN + "==================================================" + RESET);
+        System.out.println(BOLD + BLUE + "        INVENTORY MANAGEMENT SYSTEM - v1.0         " + RESET);
+        System.out.println(WHITE + "                 By Alvin                          " + RESET);
+        System.out.println(CYAN + "==================================================" + RESET);
     }
 
-    public static void printHelp(){
-//        System.out.println("==================================================");
-//        System.out.println("                     HELP                         ");
-//        System.out.println("==================================================");
-        System.out.println("Usage:Enter the [Code],[Command] or [Initials]");
-        System.out.println("\n--- VIEW COMMANDS ---");
-        System.out.println("[1]  view products       - Display all Products");
-        System.out.println("[2]  view product by id  - Display all Products");
-        System.out.println("[3]  view orders         - Display all Orders");
-        System.out.println("[4]  view order by id    - Display a specific order by ID");
-        System.out.println("[5]  view zero stock     - Show products with 0 stock");
-        System.out.println("[6]  view low stock      - Show products with low(configurable) stock");
+    public static void printHelp() {
+        System.out.println(BOLD + "Usage: " + RESET + "Enter the " + GREEN + "[Code]" + RESET + ", " + GREEN + "[Command]" + RESET + " or " + GREEN + "[Initials]" + RESET);
+        System.out.println("Enter " + YELLOW + "help" + RESET + " or " + YELLOW + "h" + RESET + " for this help display");
 
-        System.out.println("\n--- MANAGEMENT COMMANDS ---");
-        System.out.println("[7]  new product         - Add a new item");
-        System.out.println("[8]  new order           - Create a new order");
-        System.out.println("[9]  edit product        - Modify existing product details");
-        System.out.println("[10]  delete product     - Remove a product");
-        System.out.println("[11]  delete order       - Remove an order");
-        System.out.println("[12]  cancel order       - cancel an order");
-        //cancel mean delete but add the items which was substracted for the order
-        System.out.println("[13]  update stock        - Update the stock of a Product");
+        System.out.println(PURPLE + "\n─────────────── VIEW COMMANDS ──────────────────" + RESET);
+        System.out.println(GREEN + "[1]" + RESET + "  view products        - Display all Products");
+        System.out.println(GREEN + "[2]" + RESET + "  view product by id   - Display all Products");
+        System.out.println(GREEN + "[3]" + RESET + "  view orders          - Display all Orders");
+        System.out.println(GREEN + "[4]" + RESET + "  view order by id     - Display a specific order by ID");
+        System.out.println(GREEN + "[5]" + RESET + "  view zero stock      - Show products with 0 stock");
+        System.out.println(GREEN + "[6]" + RESET + "  view low stock       - Show products with low stock");
 
-        System.out.println("\n--- TOOLS & UTILITIES ---");
-        System.out.println("[14] sort products       - Sort products");
-        System.out.println("[15] sort orders         - Sort orders");
-        System.out.println("[16] backup              - Backup data to local storage");
-        System.out.println("[17] restore             - restore data from local storage");
-        System.out.println("[18] edit low stock      - Edit low stock constant");
-        System.out.println("[0]  exit                - Close the application");
-        System.out.println("==================================================");
+        System.out.println(PURPLE + "\n──────────── MANAGEMENT COMMANDS ────────────" + RESET);
+        System.out.println(GREEN + "[7]" + RESET + "  new product          - Add a new item");
+        System.out.println(GREEN + "[8]" + RESET + "  new order            - Create a new order");
+        System.out.println(GREEN + "[9]" + RESET + "  edit product         - Modify existing product details");
+        System.out.println(GREEN + "[10]" + RESET + " delete product       - Remove a product");
+        System.out.println(GREEN + "[11]" + RESET + " delete order         - Remove an order");
+        System.out.println(GREEN + "[12]" + RESET + " cancel order         - Cancel an order");
+        System.out.println(GREEN + "[13]" + RESET + " update stock         - Update the stock of a Product");
+
+        System.out.println(PURPLE + "\n ──────────── TOOLS & UTILITIES ────────────" + RESET);
+        System.out.println(GREEN + "[14]" + RESET + " sort products        - Sort products");
+        System.out.println(GREEN + "[15]" + RESET + " sort orders          - Sort orders");
+        System.out.println(GREEN + "[16]" + RESET + " backup               - Backup data to local storage");
+        System.out.println(GREEN + "[17]" + RESET + " restore              - Restore data from local storage");
+        System.out.println(GREEN + "[18]" + RESET + " edit low stock       - Edit low stock constant");
+        System.out.println(RED + "[0]  exit                 - Close the application" + RESET);
+        System.out.println(CYAN + "==================================================" + RESET);
     }
+
+
 }

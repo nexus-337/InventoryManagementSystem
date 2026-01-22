@@ -10,6 +10,11 @@ public class OrderItem {
     private final int unit_price;
     private final int total_price;
     @JsonCreator
+
+
+
+
+
     private OrderItem(@JsonProperty("productId") int productId , @JsonProperty("quantity") int quantity , @JsonProperty("unit_price") int unit_price , @JsonProperty("productName") String productName){
         this.productId = productId;
         this.productName = productName;
