@@ -50,9 +50,9 @@ public class Manager {
                 mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
                 Files.createDirectories(file_paths.PRODUCT.getFilePath().getParent());
                 Files.createDirectories(file_paths.ORDER.getFilePath().getParent());
-                String mapped = mapper.writeValueAsString(products);
+                String mapped = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(products);
                 Files.writeString(file_paths.PRODUCT.getFilePath() , mapped);
-                mapped = mapper.writeValueAsString(orders);
+                mapped = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(orders);
                 Files.writeString(file_paths.ORDER.getFilePath(), mapped);
             }
             private void loadFromFile() throws  IOException{
@@ -77,7 +77,7 @@ public class Manager {
                     }
                 }
                 else if(product_sort_option == ProductSortOption.NAME){
-                    for (Product temp_product : products.values().stream().sorted(Comparator.comparing(Product::getName)).toList()){
+                    for (Product temp_product : products.values().stream().sorted(Comparator.comparing(Product::getName , String.CASE_INSENSITIVE_ORDER)).toList()){
                         builder.append(temp_product.toString()).append("\n");
                     }
                 }
@@ -87,7 +87,7 @@ public class Manager {
                     }
                 }
                 else if (product_sort_option == ProductSortOption.STOCK){
-                    for (Product temp_product : products.values().stream().sorted(Comparator.comparing(Product::getUnit_price)).toList()){
+                    for (Product temp_product : products.values().stream().sorted(Comparator.comparing(Product::getStock_quantity)).toList()){
                         builder.append(temp_product.toString()).append("\n");
                     }
                 }
